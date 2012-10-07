@@ -1,13 +1,5 @@
 class DemoIese < ActiveRecord::Base
 	 def self.get_tweets
-    TweetStream.configure do |config|
-      config.consumer_key = 'c8oWlHXz7ZZ1jDXCC8RBQ'
-      config.consumer_secret = 'E5MmK2JpBPt4J7tdIMQFpqnPxxh5Ny6pLAV7Ti9AJec'
-      config.oauth_token = '728728640-Q8fELJYC4yIZdcES2vMhYnY8JK7TnqH6XAsGT8Dl'
-      config.oauth_token_secret = 'TpllcbJQ7oYyupaentq3pK5id1aJ9VdLgKssOe4lfQ'
-      config.auth_method = :oauth
-      config.parser = :yajl
-    end
     #TweetStream API used to track keywords related to thanx, and checks first for the english language being used
     thanx = TweetStream::Client.new
     thanx.on_delete do |status_id, user_id|
@@ -23,7 +15,7 @@ class DemoIese < ActiveRecord::Base
       #ErrorMailer.error_mail(message).deliver
     end
     thanx.track('@_thanxup_') do |thanx|
-      if !thanx.text.blank?
+      if thanx.text.present?
       	puts "#{thanx.text}"
         DemoIese.get_data(thanx)
       end
@@ -57,13 +49,13 @@ class DemoIese < ActiveRecord::Base
   end
 
   def self.avg_last_7_rts (username)
-    count = 0 
+    count = 0
   	tweets = Twitter.user_timeline(username, :count =>7)
     tweets.each do |x|
       count = count + x.retweet_count
     end
     return count/tweets.size
-  end 
+  end
 
 
   	#Twitter.search("@JoseCabiedes until:2012-10-03", :result_type => "recent").results.map do |status|
@@ -71,10 +63,10 @@ class DemoIese < ActiveRecord::Base
   	#end
 
   	#Twitter.search("@JoseCabiedes since:2012-10-01").results.map do |status|
-  
+
   def self.ranking_algorithm(user, verified)
     if verified || user.ratio == 11
-      user_score = 32
+      user_score = 32.0
     else
       #user attributes
       number_of_followers = get_followers_rank(user.tweet_user_number_followers)
@@ -85,7 +77,7 @@ class DemoIese < ActiveRecord::Base
       retweet = get_retweet_rank(user.retweet_count)
       user_score = retweet + number_of_followers + average_count + ratio_of_follow + listed_count + has_null_profile
     end
-    user.influence = user_score/32
+    user.influence = user_score/32.0
     user.save
   end
   #Takes the user information portion of the TweetStream object, and we
@@ -129,8 +121,6 @@ class DemoIese < ActiveRecord::Base
     end
   end
 
-
-
   def self.get_followers_rank(followers)
     case followers
       when 0 then
@@ -145,7 +135,6 @@ class DemoIese < ActiveRecord::Base
         return 4
     end
   end
-
 
   def self.get_retweet_rank(retweet)
     case retweet
@@ -166,22 +155,22 @@ class DemoIese < ActiveRecord::Base
     end
   end
 
-def self.get_average_tweets_day_rank(average)
-  case average
-    when 0 then
-      return 0
-    when 0..0.1 then
-      return 1
-    when 0.1..3 then
-      return 2
-    when 3..5 then
-      return 3
-    when 5..10 then
-      return 4
-    when 10..20 then
-      return 2
-    else
-      return 1
+  def self.get_average_tweets_day_rank(average)
+    case average
+      when 0 then
+        return 0
+      when 0..0.1 then
+        return 1
+      when 0.1..3 then
+        return 2
+      when 3..5 then
+        return 3
+      when 5..10 then
+        return 4
+      when 10..20 then
+        return 2
+      else
+        return 1
     end
   end
 
@@ -241,9 +230,4 @@ def self.get_average_tweets_day_rank(average)
         return 11
     end
   end
-
-
-
-
-
 end
