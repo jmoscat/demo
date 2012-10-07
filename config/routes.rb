@@ -1,7 +1,9 @@
 Demo::Application.routes.draw do
   #get "live/get_live_tweets"
-  match 'live/index' => 'live#index'
-  match '/live/get_live_tweets' => 'live#get_live_tweets'
+  scope :path => '/live', :controller => :live do
+    match 'index' => :index
+    match 'get_live_tweets' => :get_live_tweets
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -52,7 +54,7 @@ Demo::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'live#index'
 
   # See how all your routes lay out with "rake routes"
 
