@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(:version => 20120929123856) do
     t.integer  "tweet_user_number_followers"
     t.integer  "tweet_user_number_following"
     t.string   "tweet_location"
-    t.boolean  "ratio"
+    t.float    "ratio"
     t.boolean  "profile_null"
     t.integer  "listed_count"
     t.integer  "retweet_count",                 :default => 0

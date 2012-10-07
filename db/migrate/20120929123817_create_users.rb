@@ -12,13 +12,13 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  :tweet_user_number_followers
       t.integer  :tweet_user_number_following
       t.string   :tweet_location
-      t.boolean  :ratio
+      t.float    :ratio
       t.boolean  :profile_null
       t.integer  :listed_count
       t.integer  :retweet_count, :default => 0
       t.string   :geo_location
       t.boolean  :ratio
-      t.boolean   :verified
+      t.boolean  :verified
       t.timestamps
     end
     add_index :users, :twitter_user_id, :unique => true
