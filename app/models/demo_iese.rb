@@ -85,7 +85,7 @@ class DemoIese < ActiveRecord::Base
       retweet = get_retweet_rank(user.retweet_count)
       user_score = retweet + number_of_followers + average_count + ratio_of_follow + listed_count + has_null_profile
     end
-    user.influence = user_score
+    user.influence = user_score/32
     user.save
   end
   #Takes the user information portion of the TweetStream object, and we

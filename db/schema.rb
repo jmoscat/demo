@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(:version => 20120929123856) do
   create_table "users", :force => true do |t|
     t.string   "twitter_user_id"
     t.string   "tweet_id"
-    t.string   "influence"
+    t.float    "influence"
     t.text     "tweet_text",                                   :null => false
     t.string   "tweet_username",                               :null => false
     t.string   "tweet_image_link"

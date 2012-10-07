@@ -1,5 +1,6 @@
 Demo::Application.routes.draw do
-  get "live/get_live_tweets"
+  #get "live/get_live_tweets"
+  match 'live/index' => 'live#index'
   match '/live/get_live_tweets' => 'live#get_live_tweets'
 
   # The priority is based upon order of creation:

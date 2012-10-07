@@ -1,5 +1,7 @@
+  <body>
+
          <td width="20%" >
-            <ul id="tweets_romney">
+            <ul id="tweets_demo">
               <% @tweets.each do |x| %>
                 <div class="newsticker-demo">
                   <div class="newsticker-jcarousellite">
@@ -13,7 +15,7 @@
                         <div style="background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;">
                           "<%= x.tweet_text.html_safe %>" tweeted by <%=  x.tweet_username -%>
                         </div>
-                        <span class="cat"><b>Twipolitico Score:</b> <%= link_to(score_summary_home(x.normalized_score.round(2), x.sentiment).html_safe, :controller => 'twipolis', :action => 'user_score', :candidate => x.about_president, :tweet_id => x.tweet_id) %></span>
+                        <span class="cat"><b>Twipolitico Score:</b> <%= x.normalized_score.round(2) %></span>
                         <% if !x.tweet_location.blank? %>
                           <span class="cat"><b>Location:</b> <%= link_to(x.tweet_location, :controller => 'twipolis', :action => 'user_location', :location =>  x.tweet_location ) %></span>
                         <% else %>
@@ -27,9 +29,8 @@
               <% end %>
             </ul>
           </td>
-        </tr>
-      </table>
-    </td>
+   </body>
+
   <script type="text/javascript">
   jQuery(document).ready(function() {
       jQuery("span.cat abbr.timeago").timeago();
@@ -46,9 +47,9 @@
   function showTweets() {
       $.getJSON("/live/get_live_tweets", null, function(data) {
           if (data != null) {
-          if ($("#tweets_romney").find("#" + data.tweet_username).length != 0) {
+          if ($("#tweets_demo").find("#" + data.tweet_username).length != 0) {
           } else {
-              var score = Math.round(data.normalized_score*100)/100;
+              var score = Math.round(data.influence*100);
               if(data.sentiment == "positive"){
                 if ((score >= 0 && score <= 10) || (score >= 90)) {
                   var normalized_score = "Strongly influential, <span style='color:green'><b>positive</b></span> at " + score;
@@ -62,33 +63,19 @@
                 else {
                   var normalized_score = "Hardly influential, <span style='color:green'><b>positive</b></span> at " + score;
                 }
-              } else {
-                if ((score >= 0 && score <= 10) || (score >= 90)) {
-                  var normalized_score = "Strongly influential, <span style='color:red'><b>negative</b></span> at " + score;
-                }
-                else if ((score > 10 && score <= 25) || (score >= 75 && score < 90)) {
-                  var normalized_score = "Mildly influential, <span style='color:red'><b>negative</b></span> at " + score;
-                } 
-                else if ((score > 25 && score <= 40) || (score >= 60 && score < 75)) {
-                  var normalized_score = "Slightly influential, <span style='color:red'><b>negative</b></span> at " + score;
-                }
-                else {
-                  var normalized_score = "Hardly influential, <span style='color:red'><b>negative</b></span> at " + score;
-                }
-              }
+              } 
               
-              var user_score = "<a href=\"/twipolitico/twipolis/user_score?candidate=" + data.about_president + "&tweet_id=" + data.tweet_id + "\">" + normalized_score + "</a>";
               if(data.tweet_location == ""){
                   var tweet_location = "N/A";
               } else {
                   var tweet_location = "data.tweet_location";
               }
               var time_ago = "<abbr class=\"timeago\" title=\"" + data.created_at + "\">" + data.created_at + "</abbr>";
-              if ($("#tweets_romney li").length == 2 ){
-                  $("#tweets_romney .newsticker-demo:last").remove();
-                  $("#tweets_romney").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + " class=" + data.sentiment + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"48\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + user_score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
+              if ($("#tweets_demo li").length == 2 ){
+                  $("#tweets_demo .newsticker-demo:last").remove();
+                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + " class=" + data.sentiment + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"48\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + user_score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
               } else {
-                  $("#tweets_romney").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + " class=" + data.sentiment + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"48\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + user_score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
+                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + " class=" + data.sentiment + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"48\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + user_score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
               }
               jQuery("abbr.timeago").timeago();
           }
