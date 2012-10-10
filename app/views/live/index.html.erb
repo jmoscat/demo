@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <table width ="40%">
   <tr>
     <td width="20%" align="center"> Live Tweets</td>
@@ -34,6 +35,44 @@
     </td>
   </tr>
 </table>
+=======
+		
+    <table width ="40%">
+    	<tr>
+      	<td width="20%" align="center"> Live Tweets</td>
+      </tr>
+	    <td width="20%" >
+	        <ul id="tweets_demo">
+	          <% @tweets.each do |x| %>
+	            <div class="newsticker-demo">
+	              <div class="newsticker-jcarousellite">
+	                <li id="<%= x.tweet_username %>">
+	                  <div class="thumbnail">
+	                    <a href="https://www.twitter.com/<%= x.tweet_username %>" target="_blank"><img src=<%= x.tweet_image_link %> height="80" width="80" style="border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;"></a>
+	                    <br />
+	                    
+	                  </div>
+	                  <div class="info">
+	                    <div style="background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;">
+	                      "<%= x.tweet_text.html_safe %>"
+	                    </div>
+	                    <span style="color:#FF6900;" class="cat"><b>Influence Score:</b> <%= x.influence.round(2) %></span>
+	                    <% if !x.tweet_location.blank? %>
+	                      <span class="cat"><b>Location:</b> <%= x.tweet_location %></span>
+	                    <% else %>
+	                      <span class="cat"><b>Location:</b> N/A</span>
+	                    <% end %>
+	                    <span class="cat"><b> Tweeted by:</b> <%= x.tweet_username%></span>
+	                    <span class="cat"><b>Tweeted: </b><abbr class="timeago" title="<%= x.created_at.to_time.iso8601 %>"> <%= x.created_at %></abbr></span>
+	                  </div>
+	                </li>
+	              </div>
+	            </div>
+	          <% end %>
+	        </ul>
+	      </td>
+	    </table>
+>>>>>>> Minor changes
 
 <script type="text/javascript">
   jQuery(document).ready(function() {
