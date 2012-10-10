@@ -13,7 +13,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  :tweet_user_number_following
       t.string   :tweet_location
       t.float    :ratio
-      t.boolean  :profile_null
+      t.integer  :profile_null
       t.integer  :listed_count
       t.integer  :retweet_count, :default => 0
       t.string   :geo_location

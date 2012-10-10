@@ -1,39 +1,51 @@
-<table width ="40%">
-  <tr>
-    <td width="20%" align="center"> Live Tweets</td>
-  </tr>
-  <tr>
-    <td width="20%" >
-      <ul id="tweets_demo">
-        <% @tweets.each do |x| %>
-          <div class="newsticker-demo">
-            <div class="newsticker-jcarousellite">
-              <li id="<%= x.tweet_username %>">
-                <div class="thumbnail">
-                  <a href="https://www.twitter.com/<%= x.tweet_username %>" target="_blank"><img src=<%= x.tweet_image_link %> height="80" width="80" style="border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;"></a>
-                  <br />
-                </div>
-                <div class="info">
-                  <div style="background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;">
-                    "<%= x.tweet_text.html_safe %>"
+<html>
+<div class="navbar">
+  <div class="navbar-inner">
+    <ul class="nav">
+      <li class="active"><a href="/live/index">Home</a></li>
+      <li><a href="/live/index">Scoreboard</a></li>
+    </ul>
+  </div>
+</div>
+<body>
+  <table width ="40%">
+    <tr>
+      <td width="20%" align="center"> Live Tweets</td>
+    </tr>
+    <tr>
+      <td width="20%" >
+        <ul id="tweets_demo">
+          <% @tweets.each do |x| %>
+            <div class="newsticker-demo">
+              <div class="newsticker-jcarousellite">
+                <li id="<%= x.tweet_username %>">
+                  <div class="thumbnail">
+                    <a href="https://www.twitter.com/<%= x.tweet_username %>" target="_blank"><img src=<%= x.tweet_image_link %> height="80" width="80" style="border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;"></a>
+                    <br />
                   </div>
-                  <span style="color:#FF6900;" class="cat"><b>Influence Score:</b> <%= x.influence.round(2) %></span>
-                  <% if !x.tweet_location.blank? %>
-                    <span class="cat"><b>Location:</b><%= x.tweet_location %></span>
-                  <% else %>
-                    <span class="cat"><b>Location:</b> N/A</span>
-                  <% end %>
-                  <span class="cat"><b> Tweeted by:</b> <%= x.tweet_username%></span>
-                  <span class="cat"><b>Tweeted: </b><abbr class="timeago" title="<%= x.created_at.to_time.iso8601 %>"> <%= x.created_at %></abbr></span>
-                </div>
-              </li>
+                  <div class="info">
+                    <div style="background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;">
+                      "<%= x.tweet_text.html_safe %>"
+                    </div>
+                    <span style="color:#FF6900;" class="cat"><b>Influence Score:</b> <%= x.influence.round(2) %></span>
+                    <% if !x.tweet_location.blank? %>
+                      <span class="cat"><b>Location:</b><%= x.tweet_location %></span>
+                    <% else %>
+                      <span class="cat"><b>Location:</b> N/A</span>
+                    <% end %>
+                    <span class="cat"><b> Tweeted by:</b> <%= x.tweet_username%></span>
+                    <span class="cat"><b>Tweeted: </b><abbr class="timeago" title="<%= x.created_at.to_time.iso8601 %>"> <%= x.created_at %></abbr></span>
+                  </div>
+                </li>
+              </div>
             </div>
-          </div>
-        <% end %>
-      </ul>
-    </td>
-  </tr>
-</table>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
 
 <script type="text/javascript">
   jQuery(document).ready(function() {
@@ -69,9 +81,9 @@
               var time_ago = "<abbr class=\"timeago\" title=\"" + data.created_at + "\">" + data.created_at + "</abbr>";
               if ($("#tweets_demo li").length == 2 ){
                   $("#tweets_demo .newsticker-demo:last").remove();
-                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"60\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
+                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"80\" width=\"80\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
               } else {
-                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"48\" width=\"48\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
+                  $("#tweets_demo").prepend($("<div class=\"newsticker-demo\"><div class=\"newsticker-jcarousellite\"><li id=" + data.tweet_username + "><div class=\"thumbnail\"><a href=\"https://www.twitter.com/" + data.tweet_username + "\" target=\"_blank\"><img height=\"80\" width=\"80\" style=\"border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px; border:0px;\" src= " + data.tweet_image_link + "></a><br />" + "</div><div class=\"info\"><div style=\"background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;\">\"" + data.tweet_text + "\" tweeted by " + "<a rel=\"nofollow\" href=/twipolitico/twipolis/user_information?username=" + data.tweet_username + ">" + data.tweet_username + "</a></div><span class=\"cat\"><b>Twipolitico Score: </b>" + score + "</span><span class=\"cat\"><b>Location: </b>" + tweet_location + "</span><span class=\"cat\"><b>Tweeted: </b>" + time_ago + "</span></div></li></div></div>").fadeIn(2300));
               }
               jQuery("abbr.timeago").timeago();
           }
