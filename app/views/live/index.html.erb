@@ -3,14 +3,19 @@
   <div class="navbar-inner">
     <ul class="nav">
       <li class="active"><a href="/live/index">Home</a></li>
-      <li><a href="/live/index">Scoreboard</a></li>
+      <li><a href="/live/results">Scoreboard</a></li>
     </ul>
   </div>
 </div>
 <body>
-  <table width ="40%">
+  <div>
+  <%= link_to(image_tag("txup-logo.png", :class => "header_image", :title => "Twipolitico, why you so accurate!"), root_path) %>
+  </div>
+
+
+  <table style="margin-left:10px" width ="40%">
     <tr>
-      <td width="20%" align="center"> Live Tweets</td>
+      <td width="20%" align="center"> <%= link_to(image_tag("chat.png", :class => "icon", :title => "Twipolitico, why you so accurate!"), root_path) %></td>
     </tr>
     <tr>
       <td width="20%" >
@@ -27,13 +32,13 @@
                     <div style="background-color: white; padding:4px; border-radius: 08px; -moz-border-radius: 08px; -khtml-border-radius: 08px; -webkit-border-radius: 08px;">
                       "<%= x.tweet_text.html_safe %>"
                     </div>
-                    <span style="color:#FF6900;" class="cat"><b>Influence Score:</b> <%= x.influence.round(2) %></span>
+                    <span style="color:#FF6900;" class="cat"><b>Influence Score:</b> <%= x.influence.round(2) %>%</span>
                     <% if !x.tweet_location.blank? %>
-                      <span class="cat"><b>Location:</b><%= x.tweet_location %></span>
+                      <span class="cat"><b>Location:</b> <%= x.tweet_location %></span>
                     <% else %>
                       <span class="cat"><b>Location:</b> N/A</span>
                     <% end %>
-                    <span class="cat"><b> Tweeted by:</b> <%= x.tweet_username%></span>
+                    <span class="cat"><b> Tweeted by:</b> @<%= x.tweet_username%></span>
                     <span class="cat"><b>Tweeted: </b><abbr class="timeago" title="<%= x.created_at.to_time.iso8601 %>"> <%= x.created_at %></abbr></span>
                   </div>
                 </li>
@@ -43,6 +48,8 @@
         </ul>
       </td>
     </tr>
+    <tr>
+    <div style="float: right; margin-top:50px; margin-right: 80px;"> <%=image_tag("qr.png")%>
   </table>
 </body>
 </html>

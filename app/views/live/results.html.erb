@@ -1,0 +1,30 @@
+<html>
+<div class="navbar">
+  <div class="navbar-inner">
+    <ul class="nav">
+      <li><a href="/live/index">Home</a></li>
+      <li class="active"><a href="/live/results">Scoreboard</a></li>
+    </ul>
+  </div>
+</div>
+
+<body>
+	<table style="margin-top:25px;margin-left:30px;float:left; width: 32%;"class="table table-hover">
+    <tr>
+    </tr>
+    <tr>
+      <th style="color:#FF6900;">Influence</th>
+      <th style="color:#FF6900;">Twitter User</th>
+      <th style="color:#FF6900;">Location</th>
+    </tr>
+    <% @influencer.each_with_index do |x,index| %>
+      <tr>
+        <td><%=x.influence.round(2) %>%</td>
+        <td>@<%= x.tweet_username%></td>
+        <td><%= x.tweet_location%></td>
+      </tr>
+    <% end %>
+  </table>
+
+
+</html>

@@ -1,11 +1,24 @@
 @import "twitter/bootstrap/bootstrap";
 
 
-body { 
-	 background-color: #FFFFF2;
-	 font-family: 'Trebuchet MS', Arial, Helvetica
+@font-face {
+	font-family: 'yeah';
+	src: url('/assets/images/ITCKabelStd-Book.otf')
 }
 
+
+body { 
+	 background-image:url('background.jpg');
+	 background-repeat:repeat;
+}
+
+.navbar-inner {
+  background-color: #92b1cd; /* background color will be black for all browsers */
+  background-image: none;
+  background-repeat: no-repeat;
+  filter: none;
+  color:#FF6900;
+}
 
 @import "twitter/bootstrap/responsive";
 
@@ -35,6 +48,8 @@ body {
 // Example:
 // @linkColor: #ff0000;
 
+
+
 .newsticker-demo {
   height:180px;
   padding:3px 3px 0;
@@ -43,9 +58,28 @@ body {
   font-family:Verdana,Arial,Sans-Serif;
   font-size:12px;
   margin:1px auto;
-  background-color: #C5D2E0;
+  background-color: #92b1cd ;
   opacity: 0.90
 }
+
+.header_image {
+  display: block;
+  height: 314 px;
+  weight: 114 px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0px;
+  border: 0px;
+}
+
+.icon{
+	height: 43 px;
+  weight: 47 px;
+  margin-bottom: 5px;
+
+}
+
+
 .newsticker-demo a { text-decoration:none; }
 .newsticker-demo .title {
   text-align:center;
