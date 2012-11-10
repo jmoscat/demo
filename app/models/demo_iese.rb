@@ -17,21 +17,35 @@ class DemoIese < ActiveRecord::Base
     thanx.track('@_thanxup_') do |thanx|
       if thanx.text.present?
       	puts "#{thanx.text}"
-        DemoIese.get_data(thanx)
+        if check_if_valid(thanx)
+          names = Twitter::Extractor.extract_mentioned_screen_names(thanx.text)
+          if !name.index("test1").nil?
+            client_1 = Client.where(:twitter_name => "test1")
+            DemoIese.get_data(thanx, client_1.id)
+          elsif !name.index("test2").nil?
+            client_1 = Client.where(:twitter_name => "test2")
+            DemoIese.get_data(thanx, client_1.id)
+          end
+        end
       end
     end
   end
 
-  def self.get_data(thanx)
+  def self.get_data(thanx, client_id)
   	test_user = User.where(:twitter_user_id => thanx.user.id_str)
+    test_tweet = Tweet.where(:tweet_id => thanx.id_str)
+    if test_tweet.blank?
+      new_tweet.tweet_id = thanx.id_str
+      new_tweet.twitter_user_id = thanx.user.id_str
+      new_tweet.tweet_text = thanx.text
+      new_tweet.save
+    end
   	if test_user.blank?
   		new_user = User.new
   		new_user.twitter_user_id = thanx.user.id_str
-  		new_user.tweet_text = DemoIese.check_for_elements_and_replace(thanx.text)
+  		#new_user.tweet_text = DemoIese.check_for_elements_and_replace(thanx.text)
       new_user.ratio = DemoIese.obtain_ratio(thanx.user)
-      new_user.tweet_id = thanx.id_str
       new_user.tweet_username = thanx.user.screen_name
-      new_user.tweet_image_link = thanx.user.profile_image_url_https
       new_user.tweet_user_link = "http://www.twitter.com/#{thanx.user.screen_name}"
       followers_and_tweets_amount = DemoIese.get_tweet_user_information(thanx.user)
       new_user.tweet_user_number_followers = followers_and_tweets_amount[0]
@@ -45,8 +59,40 @@ class DemoIese < ActiveRecord::Base
       new_user.geo_location = thanx.geo
       new_user.save
       DemoIese.ranking_algorithm(new_user, new_user.verified)
-  	end
+      DemoIese.check_visit(client_id, new_user.id)
+    else
+      DemoIese.check_visit(client_id, test_user.id)
+      test_user.retweet_count = DemoIese.avg_last_7_rts(test_user.tweet_username)
+      DemoIese.ranking_algorithm(test_user, test_user.verified)
+    end
   end
+
+  def self.check_visit(client_id, user_id)
+    visit = Visit.where("user_id = ? AND client_id = ?", user_id, client_id)
+    if visit.blank?
+      new_visit = Visit.new
+      new_visit.user_id = user_id
+      new_visit.client_id = client_id
+      new_visit.save
+      new_join = UserClientJoin.new
+      new_join.user_id = user_id
+      new_join.client_id = client_id
+      new_join.save
+    elsif (((Time.now - visit.updated_at).to_i)/86400) >= 8
+      new_visit = Visit.new
+      new_visit.user_id = user_id
+      new_visit.client_id = client_id
+      new_visit.save
+    end
+  end
+
+  def self.create_send_cupon(user_id,client_id)
+    url = Discount.generate_cupon(user_id,client_id)
+    user_name = User.where(:user_id => user_id).tweet_username
+    #Send tweet
+
+  end
+
 
   def self.avg_last_7_rts (username)
     count = 0
@@ -57,8 +103,21 @@ class DemoIese < ActiveRecord::Base
     return count/tweets.size
   end
 
+  def self.check_if_valid(tweet)
+    if !tweet[:entities][:hashtags].blank?
+      tweet[:entities][:hashtags].each do |x|
+        if (x.text =~ /(thnxup)/)
+          regex = Regexp.new (/(\d+)/)
+          mt = regex.match(x.text)
+          return true
+        else
+          return false
+        end   
+      end
+    end
+  end
 
-  	#Twitter.search("@JoseCabiedes until:2012-10-03", :result_type => "recent").results.map do |status|
+  	#Twitter.search("@JoseCabiedes until:2012-10-01-03", :result_type => "recent").results.map do |status|
   	#"#{status.from_user}: #{status.text}" 
   	#end
 
