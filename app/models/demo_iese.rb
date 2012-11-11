@@ -19,12 +19,13 @@ class DemoIese < ActiveRecord::Base
       	puts "#{thanx.text}"
         if check_if_valid(thanx)
           names = Twitter::Extractor.extract_mentioned_screen_names(thanx.text)
-          if !name.index("test1").nil?
-            client_1 = Client.where(:twitter_name => "test1")
-            DemoIese.get_data(thanx, client_1.id)
-          elsif !name.index("test2").nil?
-            client_1 = Client.where(:twitter_name => "test2")
-            DemoIese.get_data(thanx, client_1.id)
+          puts names
+          if !names.index("_thanxup_").nil?
+            client = Client.where(:twitter_name => "_thanxup_").first
+            DemoIese.get_data(thanx, client.id)
+          elsif !names.index("test2").nil?
+            client = Client.where(:twitter_name => "test2").first
+            DemoIese.get_data(thanx, client.id)
           end
         end
       end
@@ -32,9 +33,10 @@ class DemoIese < ActiveRecord::Base
   end
 
   def self.get_data(thanx, client_id)
-  	test_user = User.where(:twitter_user_id => thanx.user.id_str)
-    test_tweet = Tweet.where(:tweet_id => thanx.id_str)
+  	test_user = User.where(:twitter_user_id => thanx.user.id_str).first
+    test_tweet = Tweet.where(:tweet_id => thanx.id_str).first
     if test_tweet.blank?
+      new_tweet = Tweet.new
       new_tweet.tweet_id = thanx.id_str
       new_tweet.twitter_user_id = thanx.user.id_str
       new_tweet.tweet_text = thanx.text
@@ -58,6 +60,7 @@ class DemoIese < ActiveRecord::Base
       new_user.verified = thanx.user.verified
       new_user.geo_location = thanx.geo
       new_user.save
+      puts "Saved user"
       DemoIese.ranking_algorithm(new_user, new_user.verified)
       DemoIese.check_visit(client_id, new_user.id)
     else
@@ -67,29 +70,33 @@ class DemoIese < ActiveRecord::Base
     end
   end
 
-  def self.check_visit(client_id, user_id)
-    visit = Visit.where("user_id = ? AND client_id = ?", user_id, client_id)
+  def self.check_visit(clientid, userid)
+    visit = Visit.where("user_id = ? AND client_id = ?", userid, clientid).first
     if visit.blank?
       new_visit = Visit.new
-      new_visit.user_id = user_id
-      new_visit.client_id = client_id
+      new_visit.user_id = userid
+      new_visit.client_id = clientid
       new_visit.save
       new_join = UserClientJoin.new
-      new_join.user_id = user_id
-      new_join.client_id = client_id
+      new_join.user_id = userid
+      new_join.client_id = clientid
       new_join.save
+      DemoIese.create_send_cupon(userid,clientid)
     elsif (((Time.now - visit.updated_at).to_i)/86400) >= 8
       new_visit = Visit.new
-      new_visit.user_id = user_id
-      new_visit.client_id = client_id
+      new_visit.user_id = userid
+      new_visit.client_id = clientid
       new_visit.save
+      DemoIese.create_send_cupon(user_id,clientid)
     end
   end
 
   def self.create_send_cupon(user_id,client_id)
     url = Discount.generate_cupon(user_id,client_id)
-    user_name = User.where(:user_id => user_id).tweet_username
-    #Send tweet
+    user_name = User.where(:id => user_id).first.tweet_username
+    client_name = Client.where(:id => client_id).first.twitter_name
+    tweet = "@"+user_name + "hey man this is your coupon from @"+client_name+": "+url
+    Twitter.update(tweet)
 
   end
 
@@ -106,14 +113,11 @@ class DemoIese < ActiveRecord::Base
   def self.check_if_valid(tweet)
     if !tweet[:entities][:hashtags].blank?
       tweet[:entities][:hashtags].each do |x|
-        if (x.text =~ /(thnxup)/)
-          regex = Regexp.new (/(\d+)/)
-          mt = regex.match(x.text)
+        if (x["text"] = "thnxup")
           return true
-        else
-          return false
         end   
       end
+      return false
     end
   end
 

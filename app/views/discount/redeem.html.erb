@@ -1,0 +1,9 @@
+
+<%= @cupon.description %>
+
+<%= form_tag(:controller => "discount", :action => "check", :method => "get") do %>
+  <%= label_tag(:passcode, "Passcode:") %>
+  <%= text_field_tag(:passcode) %>
+  <%= hidden_field_tag "hash", @cupon.hash_key %>
+  <%= submit_tag("Redeem") %>
+<% end %>

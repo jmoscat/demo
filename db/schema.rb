@@ -11,18 +11,56 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120929123856) do
+ActiveRecord::Schema.define(:version => 20121110150938) do
+
+  create_table "clients", :force => true do |t|
+    t.string   "twitter_name",    :null => false
+    t.string   "twitter_user_id"
+    t.string   "email"
+    t.string   "password"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  add_index "clients", ["twitter_name"], :name => "index_clients_on_twitter_name"
 
   create_table "demo_ieses", :force => true do |t|
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
+  create_table "discounts", :force => true do |t|
+    t.string   "hash_key"
+    t.string   "user_id",     :null => false
+    t.string   "client_id"
+    t.text     "description"
+    t.boolean  "used"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "discounts", ["hash_key"], :name => "index_discounts_on_hash_key"
+
+  create_table "tweets", :force => true do |t|
+    t.string   "tweet_id",        :null => false
+    t.string   "twitter_user_id"
+    t.text     "tweet_text"
+    t.string   "place"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "user_client_joins", :force => true do |t|
+    t.string   "user_id",    :null => false
+    t.string   "client_id",  :null => false
+    t.integer  "visits"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "twitter_user_id"
-    t.string   "tweet_id"
     t.float    "influence"
-    t.text     "tweet_text",                                   :null => false
     t.string   "tweet_username",                               :null => false
     t.string   "tweet_image_link"
     t.string   "tweet_user_link"
@@ -41,5 +79,13 @@ ActiveRecord::Schema.define(:version => 20120929123856) do
   end
 
   add_index "users", ["twitter_user_id"], :name => "index_users_on_twitter_user_id", :unique => true
+
+  create_table "visits", :force => true do |t|
+    t.string   "user_id",    :null => false
+    t.string   "client_id",  :null => false
+    t.float    "price"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
 end
