@@ -4,6 +4,7 @@ class CreateClients < ActiveRecord::Migration
       t.string		 :twitter_name, :null => false
       t.string     :twitter_user_id
       t.string     :email
+      t.string     :tweet_url
       t.string 		 :password
       t.timestamps
     end
