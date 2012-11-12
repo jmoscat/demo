@@ -38,5 +38,10 @@ class DiscountController < ApplicationController
   def notfound
   end
 
+  def qr 
+    @client_url = Client.find(:first, :conditions => [ "hash_id = ?", params[:hash]]).tweet_url
+    redirect_to @client_url
+  end
+
 
 end
