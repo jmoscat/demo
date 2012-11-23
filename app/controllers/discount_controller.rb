@@ -27,7 +27,8 @@ class DiscountController < ApplicationController
   	elsif (passcode == cupon.client.password) && (cupon.used == true)
   		redirect_to :action => "failed"
   	elsif (passcode != cupon.client.password)
-  		
+      flash.now[:error] = "Invalid password, try again pls ;)"
+      redirect_to redeem, :flash => { :error => "Insufficient rights!" }  
   	end
   end
 
